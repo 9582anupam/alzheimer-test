@@ -14,19 +14,28 @@ import { Label } from "@/components/ui/label";
 import { Brain, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import Slide, { SlideProps } from '@mui/material/Slide';
+
 
 export default function SignupPage() {
     const [error, setError] = useState("");
-    const router = useRouter();
+    const [open, setOpen] = useState(false);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setError("This email is already registered. Please sign in instead.");
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-background to-secondary flex items-center justify-center p-4">
+        <div className="min-h-screen bg-gradient-to-b from-background to-secondary flex items-center justify-center p-4 relative">
             <Card className="w-full max-w-md">
                 <CardHeader className="space-y-4">
                     <div className="flex justify-between items-center">
@@ -114,6 +123,28 @@ export default function SignupPage() {
                     </CardFooter>
                 </form>
             </Card>
+
+            <Snackbar
+                open={open}
+                onClose={handleClose}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                autoHideDuration={50000}
+                style={{ maxWidth: "400px" }}
+                color="error"
+                TransitionComponent={(props) => (
+                    <Slide {...props} direction="left" />
+                )}
+                message="90% of people with Alzheimer’s forget their password—or forget they’ve ever registered on a website!"
+                action={
+                    <IconButton
+                        size="small"
+                        aria-label="close"
+                        color="inherit"
+                        onClick={handleClose}>
+                        <CloseIcon fontSize="small" />
+                    </IconButton>
+                }
+            />
         </div>
     );
 }
